@@ -6,11 +6,15 @@ class Board {
     }
 
     makeChessBoard(n) {
-        let board = new Array(n)
-        for (let i = 0; i < n; i++) {
-            board.push(new Array(n));
+        let b = []
+        for(let i=0; i<n; i++){
+            let tmp = []
+            for(let j=0; j<n; j++){
+                tmp.push(0);
+            }
+            b.push(tmp);
         }
-        return board;
+        return b;
     }
 
     rows() {
@@ -135,7 +139,7 @@ class Board {
         let isConflict = false;
 
         for (let i = 0; i < rows.length; i++) {
-            if (this._isInBounds(i, SlashColumnIndexAtFirstRow)) {
+            if (this.isInBounds(i, SlashColumnIndexAtFirstRow)) {
                 slashArr.push(rows[i][SlashColumnIndexAtFirstRow]);
             }
             SlashColumnIndexAtFirstRow--;
@@ -150,7 +154,11 @@ class Board {
     // 체스 판 위에 슬래시 대각선(/)에 충돌이 하나라도 있는지 검사합니다.
     hasAnySlashConflicts() {
         let slashCount = this.rows().length * 2 - 1;
-        let areComplicts = _.range(slashCount).map(idx => {
+        let idxArr = []
+        for (let i = 0; i < slashCount; i++) {
+            idxArr.push(i);
+        }
+        let areComplicts = idxArr.map(idx => {
             return this.hasSlashConflictAt(idx)
         })
 
@@ -164,7 +172,7 @@ class Board {
         let isConflict = false
 
         for (let i = 0; i < rows.length; i++) {
-            if (this._isInBounds(i, BackSlashColumnIndexAtFirstRow)) {
+            if (this.isInBounds(i, BackSlashColumnIndexAtFirstRow)) {
                 bSlashArr.push(rows[i][BackSlashColumnIndexAtFirstRow])
             }
             BackSlashColumnIndexAtFirstRow++;
@@ -221,7 +229,7 @@ function findNRooksSolution(n) {
         return;
     }
 
-    let solution = new Board({ 'n': n }); // fixme
+    let solution = new Board(n)
     for (let i = 0; i < n; i++) {
         recursion(0, i);
         if (n === sum2DArr(solution.rows())) {
@@ -265,7 +273,7 @@ function countNRooksSolutions(n) {
         return 1;
     }
 
-    let solution = new Board({ 'n': n }); // fixme
+    let solution = new Board(n)
     for (let i = 0; i < n; i++) {
         recursion(0, i);
         solution.togglePiece(0, i);
@@ -320,7 +328,7 @@ function findNQueensSolution(n) {
         return [[1]];
     }
 
-    let solution = new Board({ 'n': n }); // fixme
+    let solution = new Board(n)
     for (let i = 0; i < n; i++) {
         recursion(0, i);
         if (n === sum2DArr(solution.rows())) {
@@ -365,12 +373,17 @@ function countNQueensSolutions(n) {
     let solutionCount = 0; // fixme
     let flag = false;
 
-    let solution = new Board({ 'n': n }); // fixme
+    let solution = new Board(n)
     for (let i = 0; i < n; i++) {
         recursion(0, i);
         solution.togglePiece(0, i);
     }
-
+    
     console.log('Number of solutions for ' + n + ' queens:', solutionCount);
     return solutionCount;
 }
+
+findNRooksSolution(4);
+countNRooksSolutions(4);
+findNQueensSolution(4);
+countNQueensSolutions(4);
